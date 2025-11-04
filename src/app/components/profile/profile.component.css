@@ -155,3 +155,9 @@ h3 {
   text-align: center;
 }
 
+.avatar-url {
+  font-size: 11px;
+  word-break: break-all;
+  color: #666;
+}
+

@@ -41,16 +41,27 @@ export class ProfileComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    // Use mockGetProfile for demo - replace with getProfile() for actual API
-    this.profileService.mockGetProfile().subscribe({
+    // Call real API profile endpoint
+    this.profileService.getProfile().subscribe({
       next: (profile) => {
-        console.log('Profile loaded:', profile);
+        console.log('✅ Profile loaded:', profile);
         this.profile = profile;
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Profile error:', error);
-        this.errorMessage = error.error?.message || 'Failed to load profile. Please try again.';
+        console.error('❌ Profile error:', error);
+        // Handle different error types
+        if (error.status === 401) {
+          this.errorMessage = 'Unauthorized. Please login again.';
+          // Optionally redirect to login
+          setTimeout(() => {
+            this.logout();
+          }, 2000);
+        } else if (error.status === 403) {
+          this.errorMessage = 'Access forbidden. Insufficient permissions.';
+        } else {
+          this.errorMessage = error.error?.message || 'Failed to load profile. Please try again.';
+        }
         this.isLoading = false;
       }
     });

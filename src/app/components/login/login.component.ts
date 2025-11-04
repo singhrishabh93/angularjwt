@@ -31,9 +31,10 @@ export class LoginComponent implements OnInit {
     }
 
     // Initialize login form with validators
+    // Pre-fill demo credentials for easy testing
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      email: ['john@mail.com', [Validators.required, Validators.email]],
+      password: ['changeme', [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -51,17 +52,24 @@ export class LoginComponent implements OnInit {
         password: this.loginForm.value.password
       };
 
-      // Use mockLogin for demo - replace with login() for actual API
-      this.loginService.mockLogin(credentials).subscribe({
+      // Call real API login endpoint
+      this.loginService.login(credentials).subscribe({
         next: (response) => {
-          console.log('Login successful:', response);
+          console.log('✅ Login successful:', response);
           this.isLoading = false;
           // Redirect to profile page after successful login
           this.router.navigate(['/profile']);
         },
         error: (error) => {
-          console.error('Login error:', error);
-          this.errorMessage = error.error?.message || 'Login failed. Please try again.';
+          console.error('❌ Login error:', error);
+          // Handle different error types
+          if (error.status === 401) {
+            this.errorMessage = 'Invalid email or password. Please try again.';
+          } else if (error.status === 400) {
+            this.errorMessage = error.error?.message || 'Invalid request. Please check your input.';
+          } else {
+            this.errorMessage = error.error?.message || 'Login failed. Please try again.';
+          }
           this.isLoading = false;
         }
       });

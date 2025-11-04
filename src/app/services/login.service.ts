@@ -10,20 +10,16 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string;
-  user?: {
-    id: string;
-    email: string;
-    name: string;
-  };
+  access_token: string;
+  refresh_token: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  // Replace with your actual API endpoint
-  private apiUrl = 'https://your-api.com/api/auth/login';
+  // EscuelaJS API endpoint
+  private apiUrl = 'https://api.escuelajs.co/api/v1/auth/login';
 
   constructor(
     private http: HttpClient,
@@ -38,42 +34,31 @@ export class LoginService {
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(this.apiUrl, credentials).pipe(
       tap((response) => {
-        // Automatically store token when login is successful
-        if (response.token) {
-          this.authService.setToken(response.token);
-          console.log('Token stored successfully');
+        // Automatically store tokens when login is successful
+        if (response.access_token) {
+          this.authService.setToken(response.access_token);
+          this.authService.setRefreshToken(response.refresh_token);
+          console.log('✅ Login successful! Tokens stored.');
+          console.log('📦 Login Response:', response);
         }
       })
     );
   }
 
   /**
-   * For demo purposes - mock login endpoint
-   * Replace this with your actual API call
+   * Refresh access token using refresh token
    */
-  mockLogin(credentials: LoginRequest): Observable<LoginResponse> {
-    // Simulate API call
-    return new Observable((observer) => {
-      setTimeout(() => {
-        // Mock response - Replace with actual API call
-        const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJlbWFpbCI6ImRlbW9AZXhhbXBsZS5jb20ifQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
-        const response: LoginResponse = {
-          token: mockToken,
-          user: {
-            id: '123',
-            email: credentials.email,
-            name: 'John Doe'
-          }
-        };
-        
-        // Store token
-        this.authService.setToken(mockToken);
-        console.log('✅ Login successful! Token received and stored.');
-        console.log('📦 Login Response:', response);
-        observer.next(response);
-        observer.complete();
-      }, 1000);
-    });
+  refreshToken(refreshToken: string): Observable<LoginResponse> {
+    const refreshUrl = 'https://api.escuelajs.co/api/v1/auth/refresh-token';
+    return this.http.post<LoginResponse>(refreshUrl, { refreshToken }).pipe(
+      tap((response) => {
+        if (response.access_token) {
+          this.authService.setToken(response.access_token);
+          this.authService.setRefreshToken(response.refresh_token);
+          console.log('✅ Token refreshed successfully!');
+        }
+      })
+    );
   }
 }
 

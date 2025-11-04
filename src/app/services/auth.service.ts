@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
+  private readonly REFRESH_TOKEN_KEY = 'refresh_token';
 
   constructor() {}
 
@@ -21,19 +22,31 @@ export class AuthService {
    * Get JWT token from localStorage
    */
   getToken(): string | null {
-    const token = localStorage.getItem(this.TOKEN_KEY);
-    if (token) {
-      console.log('🔑 Current JWT Token:', token);
-      console.log('📋 Token decoded:', this.decodeToken(token));
-    }
-    return token;
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
   /**
-   * Remove JWT token from localStorage
+   * Store refresh token in localStorage
+   */
+  setRefreshToken(refreshToken: string): void {
+    localStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
+    console.log('🔄 Refresh token stored');
+  }
+
+  /**
+   * Get refresh token from localStorage
+   */
+  getRefreshToken(): string | null {
+    return localStorage.getItem(this.REFRESH_TOKEN_KEY);
+  }
+
+  /**
+   * Remove JWT token and refresh token from localStorage
    */
   removeToken(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+    console.log('🚪 Tokens removed (logged out)');
   }
 
   /**

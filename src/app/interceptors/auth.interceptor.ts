@@ -12,9 +12,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   // If token exists, clone the request and add Authorization header
   if (token) {
-    console.log('🌐 Interceptor: Adding JWT token to request headers');
-    console.log('📡 Request URL:', req.url);
-    console.log('🔑 Authorization Header:', `Bearer ${token}`);
+    console.log('🌐 Interceptor: Adding JWT token to request:', req.url);
     const clonedRequest = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`

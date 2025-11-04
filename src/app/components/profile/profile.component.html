@@ -41,6 +41,11 @@
           <label>User ID:</label>
           <span>{{ profile.id }}</span>
         </div>
+
+        <div class="info-item" *ngIf="profile.avatar">
+          <label>Avatar URL:</label>
+          <span class="avatar-url">{{ profile.avatar }}</span>
+        </div>
       </div>
     </div>
 

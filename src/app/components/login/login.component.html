@@ -1,0 +1,62 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Login</h2>
+    <p class="subtitle">Enter your credentials to access your account</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          [class.error]="f['email'].invalid && f['email'].touched"
+          placeholder="Enter your email"
+        />
+        <div class="error-message" *ngIf="f['email'].invalid && f['email'].touched">
+          <span *ngIf="f['email'].errors?.['required']">Email is required</span>
+          <span *ngIf="f['email'].errors?.['email']">Please enter a valid email</span>
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          [class.error]="f['password'].invalid && f['password'].touched"
+          placeholder="Enter your password"
+        />
+        <div class="error-message" *ngIf="f['password'].invalid && f['password'].touched">
+          <span *ngIf="f['password'].errors?.['required']">Password is required</span>
+          <span *ngIf="f['password'].errors?.['minlength']">Password must be at least 6 characters</span>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="isLoading || loginForm.invalid"
+      >
+        <span *ngIf="!isLoading">Login</span>
+        <span *ngIf="isLoading">Logging in...</span>
+      </button>
+    </form>
+
+    <div class="demo-info">
+      <p><strong>Demo:</strong> Use any email and password (min 6 chars) to login</p>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,29 @@
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { AuthService } from '../services/auth.service';
+
+/**
+ * HTTP Interceptor to automatically add JWT token to request headers
+ * This interceptor will add 'Authorization: Bearer <token>' header to all HTTP requests
+ */
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
+  const token = authService.getToken();
+
+  // If token exists, clone the request and add Authorization header
+  if (token) {
+    console.log('🌐 Interceptor: Adding JWT token to request headers');
+    console.log('📡 Request URL:', req.url);
+    console.log('🔑 Authorization Header:', `Bearer ${token}`);
+    const clonedRequest = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return next(clonedRequest);
+  }
+
+  // If no token, proceed with original request
+  return next(req);
+};
+

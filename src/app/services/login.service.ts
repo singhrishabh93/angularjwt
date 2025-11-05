@@ -38,8 +38,6 @@ export class LoginService {
         if (response.access_token) {
           this.authService.setToken(response.access_token);
           this.authService.setRefreshToken(response.refresh_token);
-          console.log('✅ Login successful! Tokens stored.');
-          console.log('📦 Login Response:', response);
         }
       })
     );

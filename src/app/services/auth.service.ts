@@ -10,42 +10,40 @@ export class AuthService {
   constructor() {}
 
   /**
-   * Store JWT token in localStorage
+   * Store JWT token in sessionStorage
    */
   setToken(token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
-    console.log('🔐 JWT Token stored:', token);
-    console.log('📋 Token decoded:', this.decodeToken(token));
+    sessionStorage.setItem(this.TOKEN_KEY, token);
   }
 
   /**
-   * Get JWT token from localStorage
+   * Get JWT token from sessionStorage
    */
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    return sessionStorage.getItem(this.TOKEN_KEY);
   }
 
   /**
-   * Store refresh token in localStorage
+   * Store refresh token in sessionStorage
    */
   setRefreshToken(refreshToken: string): void {
-    localStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
+    sessionStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
     console.log('🔄 Refresh token stored');
   }
 
   /**
-   * Get refresh token from localStorage
+   * Get refresh token from sessionStorage
    */
   getRefreshToken(): string | null {
-    return localStorage.getItem(this.REFRESH_TOKEN_KEY);
+    return sessionStorage.getItem(this.REFRESH_TOKEN_KEY);
   }
 
   /**
-   * Remove JWT token and refresh token from localStorage
+   * Remove JWT token and refresh token from sessionStorage
    */
   removeToken(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+    sessionStorage.removeItem(this.TOKEN_KEY);
+    sessionStorage.removeItem(this.REFRESH_TOKEN_KEY);
     console.log('🚪 Tokens removed (logged out)');
   }
 

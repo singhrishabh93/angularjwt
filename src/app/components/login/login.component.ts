@@ -55,7 +55,6 @@ export class LoginComponent implements OnInit {
       // Call real API login endpoint
       this.loginService.login(credentials).subscribe({
         next: (response) => {
-          console.log('✅ Login successful:', response);
           this.isLoading = false;
           // Redirect to profile page after successful login
           this.router.navigate(['/profile']);
